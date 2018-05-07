@@ -1,0 +1,478 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{mathtools}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{example}{Example}[section]
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{remark}
+\newtheorem*{notation}{Notation}
+
+\def\reals{{\mathbb R}}
+\def\scriptm{{\mathcal M}}
+\def\integers{{\mathbb Z}}
+\def\naturals{{\mathbb N}}
+\def\rationals{{\mathbb Q}}
+
+\title{105 Measure Theory Notes}
+
+
+\begin{document}
+\section{Measurable Functions}
+We want to use this improved notion of measurability to define an improved integral (the ''lebesque integral''). We must first discuss the types of functions that we will attempt to integrate.
+\begin{definition}
+A function $f: \reals^n \to \reals$ is Lebesque measurable if for all open sets $U \subseteq \reals$, we have $f^{-1}(U) \in \scriptm(\reals^n)$
+\end{definition}
+
+Since open sets are measurable, we immediately see that $f: \reals^2 \to \reals$ continuous is lebesque measurable. We can say more:
+\begin{prop}
+If $f: \reals^n \to \reals$ is Riemann integrable than it is lebesque measurable.
+\end{prop}
+\begin{proof}
+Let $D\in \reals^n$ be the discontinuity set of $f$. By the Riemann-Lebesque Theorem, $D$ is a zero set. Hence $D \in \scriptm$ with $m(D) = 0$. Define a continuous $g : D^c \to \reals$ by $g(x) = f(x)$. Then for any $S \subseteq \reals$, it is easy to see that $g^{-1}(S) \subseteq f^{-1}(S) \subseteq g^{-1} \cup D$. In particular, if $S$ is open then $g$ continuous implies $g^{-1}(S)$ is open and hence measurable. But then $f^{-1}(S) = g^{-1}(S) \cup (D \setminus f^{-1}(S))$ which are both measurable so $f^{-1}(S) \in \scriptm$ and so $f$ is lebesque measurable.
+\end{proof}
+
+\begin{prop}
+Let $f: \reals^n \to \reals$. The following are equivalent: \begin{itemize}
+	\item $f$ is lebesque measurable
+	\item For all closed subsets $V \subseteq \reals$, $f^{-1}(V) \in \scriptm$
+	\item For all $a \in \reals$, $f^{-1}((a, \infty))\in \scriptm$
+	\item For all $a\in\reals$, $f^{-1}((-\infty, a))\in\scriptm$
+	\item For all $a\in\reals$, $f^{-1}([a, \infty))\in \scriptm$
+	\item For all $a\in\reals$, $f^{-1}((-\infty, a])\in\scriptm$
+\end{itemize}
+\end{prop}
+
+\begin{prop}
+Let $f,g: \reals^n \to \reals$ be measurable. Then $f + g$ and $f \circ g$ are measurable.
+\end{prop}
+\begin{proof}
+Let $a \in \reals$. By the previous prop, it suffices to show $$(f + g)^{-1}([a, \infty)) \in\scriptm$$
+Observe that, $$(f + g)(x) \geq a \Leftrightarrow g(x) \geq a - f(x)$$.
+We claim $$ (f + g)^{-1} ([a, \infty)) = \cap_{n\in\naturals} \cup_{k\in\integers} f^{-1}((-\infty, \frac{k}{n}]) \cap g^{-1}([a - \frac{k}{n}, \infty))$$
+For $x$ in RHS, $$f(x) + g(x) \geq a \Rightarrow g(x) \geq a - f(x)$$. 
+Then $\forall n \in \naturals, \exists k \in \integers$ such that $f(x) \leq \frac{k}{n}$. Hence, $g(x) \geq a - \frac{k}{n}$. So $$x\in \cup_{k\in\integers} f^{-1}((-\infty, \frac{k}{n}]) \cap g^{-1}([a - \frac{k}{n}, \infty))$$. 
+Since this holds for all $n\in\naturals$, $x$ is in LHS.
+Conversely, let $x$ in LHS, Then $\forall n\in\naturals$, $\exists k \in \integers$ such that $\frac{k-1}{n} \leq f(x) \leq \frac{k}{n}$. Since $f(x) \leq \frac{k}{n} \Rightarrow g(x) \geq a - \frac{k}{n}$. Thus $f(x) + g(x) \geq \frac{k-1}{n} + a - \frac{k}{n} = a - \frac{1}{n}$. Letting $n\to\infty$ yields $f(x) + g(x) \geq a$. So $x$ in RHS. Now since $f$ and $g$ are measurable, the above proposition implies that $f^{-1}((-\infty, \frac{k}{n}]) \cap g^{-1}([a - \frac{k}{n}, \infty))$ is measurable. Since $\scriptm$ is closed under countable unions and intersections, we obtain $(f + g)^{-1}([a, \infty))\in \scriptm$. Thus $(f + g)$ is lebesque measurable. The proof for $f \circ g$ is similar but now one must be careful about the signs of $a, \frac{n}{k}$.   
+\end{proof}
+\begin{prop}
+Let $(f_k)_{k\in\naturals}$ be a sequence of uniformly bounded measurable functions from $\reals^n \to \reals$. Then $g_1(x) = \sup_k f_k(x)$, $g_2(x) = \inf_k f_k(x)$, $g_3(x) = \limsup_{k\to\infty} f_k(x)$, $g_4(x) = \liminf_{k\to\infty} f_k(x)$, are all measurable and if the sequence converges pointwise, then $\lim_{k\to\infty} f_k$ is measurable.
+\end{prop}
+\begin{proof}
+Observe that $\forall a \in \reals$, 
+\begin{align*}
+g_1^{-1}((a, \infty)) &= \cup_{k\in\naturals} f_k^{-1}((a, \infty)) \in \scriptm \\
+g_2^{-1}((-\infty, a)) &= \cup_{k\in\naturals} f_k^{-1}((-\infty, a)) \in \scriptm \\
+\end{align*}
+Thus $g_1$ and $g_2$ are measurable. But then $$g_3(x) = \inf_N(\sup_{k\geq N} f_k(x))$$ is measurable, and similarly for $g_4$. Finally, if the sequence converges pointwise then $\lim_{k\to\infty} f_k = g_3 = g_4$ so it is measurable.
+\end{proof}
+\begin{corollary}
+If $f,g: \reals^n \to \reals$ are measurable, then so are $\max(f, g)$ and $\min(f, g)$.
+\end{corollary}
+
+Recall that for the Riemann integral. The fundamental functions that all Riemann integrable function were approximated by were step functions. The big diference between the Riemann integral and the ``Lebesque integral'' will come from swapping out step functions for ``simple functions''. 
+\begin{definition}
+A function $f: \reals^n \to \reals$ is called a simple function if $\exists c_1, \dots, c_d \in \reals$ and $E_1, \dots, E_d \in \scriptm$ such that $$f = \sum_{i=1}^d c_i \chi_{E_i}$$.
+
+That is, a simple function is a finite, linear combination of characteristic functions of measurable subsets.
+\end{definition}
+
+Observe that for $a\in \reals$, and $f$ a simple function as above $$f^{-1}([a, \infty)) = \begin{cases} 
+\cup_{c_i \geq a} E_i & \text{if } a > 0 \\
+\cup_{c_i \geq a} E_i \cup (E_1 \cup \dots \cup E_i)^c & \text{if } a \leq 0 \\
+\end{cases}$$. Thus $f \in \scriptm$. 
+
+An equivalent definition of a simple function is a measurable function $f: \reals^n \to \reals$ such that $f(\reals^n)$ is a finite set. Indeed, let $\{c_1, \dots, c_d\} = f(\reals^n)$, then $f = \sum_i c_i \chi_{f^{-1}(\{c_i\})}$.
+
+\begin{theorem}
+Let $f: \reals^n \to [0, \infty)$ be lebesque measurable. Then $\exists$ a sequence $\{\phi_k\}_{k\in\naturals}$ of simple functions such that $0 \leq \phi_1 \leq \phi_2 \leq \dots \leq f$, and $\lim_{k\to\infty} \phi_k(x) = f(x)$ for all $x\in \reals^n$. Moreover, if $f$ is bounded on $E \in \scriptm$, then $(phi_k)_{k\in\naturals}$ converges uniformly to $f$ on $E$. 
+\end{theorem}
+\begin{proof}
+Fix $k\in\naturals$, then for each integer $0 \leq j \leq 2^{2k} - 1$, let
+$$E^{(k)}_j = f^{-1}((j2^{-k}, (j+1)2^{-k}))$$ and
+$$F^{(k)} = f^{-1}((2^k, \infty))$$. 
+Then set, 
+$$\phi_k = \sum_{j=0}^{2^{2k} - 1} j2^{-k} \chi_{E^{(k)}_j} + 2^k\chi_{F^{(k)}}$$
+Then $0  \leq \phi_k \leq f$. Also since, $E_j^{(k)} \subseteq E_{2j}^{(k+1)}$, we have
+$$j2^{-k}\chi_{E_j^{(k)}} = 2j2^{-(k+1)} \chi_{E_j^{(k)}} \leq 2j2^{-(k+1)} \chi_{E_j^{(k+1)}}$$
+So $\phi_k \leq \phi_{k+1}$. Also, on $(F^{(k)})^c = f^{-1}([0, 2^k])$ we have $0 \leq f(x) - \phi_k(x) \leq 2^{-k}$, $\forall x \in (F^{(k)})^c$. Thus $(\phi_k)_{k\in\naturals}$ converges uniformly to $f$ on sets its bounded on. This implies that $(\phi_k)_{k\in\naturals}$ converges pointwise to $f$.
+\end{proof}
+
+\begin{corollary}
+For $f: \reals^n \to \reals$ measurable, $\exists (\phi_k)_{k\in\naturals}$ simple functions such that $0 \leq |\phi_1| \leq |\phi_2| \leq \dots \leq |f|$, and $\phi_k \to f$ pointwise and $\phi_k \rightrightarrows f$ on any set where $f$ is bounded.  
+\end{corollary}
+\begin{proof}
+Apply the Theorem to $f_{+} = f\chi_{f^{-1}([0, \infty))}$ and $f_{-} = - f\chi_{f^{-1}((-\infty, 0])}$. 
+\end{proof}
+\begin{definition}
+Given $f, g: \reals^n \to \reals$, we say $f=g$ almost everywhere (a.e.) if $\{x\in \reals^n : f(x) \neq g(x)\}$ is a zero set.
+\end{definition}
+We will see that $f=g$ a.e. implies their lebesque integrals agree.
+\begin{prop} The following both follow from this definition:
+\begin{itemize}
+	\item If $f: \reals^n \to \reals$ is measurable and $g: \reals^n \to \reals$ satisfies $f = g$ a.e. then $g$ is measurable. 
+	\item If $(f_k)_{k\in\naturals}$ is a sequence of measurable functions on $\reals^n$ and $g: \reals^n \to \reals$ satisfies $\lim_{k\to\infty} f_k = g$ a.e. Then $g$ is measurable.
+\end{itemize}
+\end{prop}
+
+\section{The Lebesque Integral}
+Let us define $L^{+}$ as the space of all Lebesque measurable functions $f: \reals^{n} \to [0, \infty)$.
+\begin{definition}
+	For a simple function $\phi = \sum_{j=1}^{n} a_j \chi_{E_j} \in L^{+}$, we define the lebesque integral of $\phi$ as the quantity: 
+	$$\int \phi dm \coloneqq \sum_{j=1}^n a_j m(E_j)$$
+\end{definition}
+\begin{remark} 
+If $m(E_j) = \infty$ and $a_j > 0$ then $\int \phi dm = \infty$. Otherwise, if each $m(E_1), \dots, m(E_n) < \infty$, then $\int \phi dm < \infty$.
+\end{remark}
+
+\begin{notation}
+If we wish to make the argument of $\phi$ explicit we will write $\int \phi(x) dm(x) \coloneqq \int \phi dm$
+
+If $A \in \scriptm$, then
+$$\phi \chi_A = \sum_{j =1}^n a_j \chi_{E_j \cap A} \in L^{+}$$,
+so its lebesque integral is defined as above. We write 
+$$\int_A \phi dm \coloneqq \int \phi \chi_A dm$$
+\end{notation}
+
+\begin{prop}
+Let $\phi$ and $\psi$ be simple functions in $L^{+}$: \begin{enumerate}
+\item If $c \geq 0$ then $\int c\phi dm = c\int \phi dm$
+\item $\int (\phi + \psi)dm = \int \phi dm + \int \psi dm$
+\item If $\phi \leq \psi$, then $\int \phi dm \leq \int \psi dm$
+\end{enumerate}
+\end{prop}
+\begin{proof}
+\begin{enumerate}
+	\item This is immediate from the definition of the lebesque integral.
+	\item TODO
+	\item TODO
+\end{enumerate}
+\end{proof}
+\begin{definition}
+For $f \in L^{+}$, the lebesque integral of $f$ is the quantity
+$$\int f dm \coloneqq \sup \{\int \phi dm : 0 \leq \phi \leq f, \phi \text{is simple}\}$$
+\end{definition}
+\begin{remark}
+If $f$ above is simple, the part (c) of the previous proposition implies this new definition agrees with the old one.
+\end{remark}
+
+\begin{theorem}
+Let $B \in \reals^d$ be a box and suppose $f: \reals^d \to [0, \infty)$ is Riemann integrable over $B$. Then the Riemann integral of $f$ over $B$ is equal to the lebesque integral of $f$ over $B$, i.e.
+$$\int_B f = \int_B f dm$$
+\end{theorem}
+\begin{proof}
+TODO
+\end{proof}
+\begin{prop}
+\begin{enumerate}
+	\item For $f,g \in L^{+}$, if $f \leq g$ then $\int f dm \leq \int g dm$
+	\item For $f \in L^{+}$ and $c > 0$, $\int cf dm = c \int f dm$
+\end{enumerate}
+\end{prop}
+\begin{proof}
+\begin{enumerate}
+	\item For any simple $\phi$ satisfying $0 \leq \phi \leq f$, we have $0 \leq \phi \leq g$. Thus $\int \phi dm \leq \int g dm \Rightarrow \int f dm \leq \int g dm$
+	\item Since this holds for simple functions and since a factor of $c$ can be extracted from the supremum we have $\int c f dm = c \int f dm$
+\end{enumerate}
+\end{proof}
+\begin{theorem}[The Monotone Convergence Theorem]
+Let $(f_k)_{k\in \naturals} \subseteq L^{+}$ be a sequence satisfying $f_1 \leq f_2 \leq \dots$. Define
+$$f = \lim_{n\to\infty} f_n = \sup f_n$$. 
+Then $$\int f dm = \lim_{n\to \infty} \int f_n dm$$
+\end{theorem}
+\begin{proof}
+By the previous proposition $\int f_n dm$ is an increasing sequence, so its limit exists, though it may be infinite. Furthermore, $f_n \leq f$ implies
+$$\lim_{n\to \infty} \int f_n dm = \sup \int f_n dm \leq \int f dm$$.
+ So it suffices to show the reverse inequality. Fix $\alpha \in (0, 1)$ and let $0 \leq \phi \leq f$ be a simple function. Consider $E_n \coloneqq \{x : f_n(x) \geq \alpha \phi(x)\}$. Then $E_1 \subseteq E_2 \subseteq \dots$ and $\cup_{n=1}^\infty E_n = \reals^d$. Indeed, the first statement is clear and for any $x \in \reals^d$, $f(x) > \alpha \phi(x)$. Thus by the definition of the supremum, $\exists n\in\naturals$ such that $f(x) \geq f_n(x) > \alpha \phi(x)$. Thus $x \in E_n$. Now, 
+$$\int f_n dm \geq \int_{E_n} f_n dm \geq \int_{E_n} \alpha \phi dm = \alpha \int_{e_n} \phi dm$$
+Suppose $\phi = \sum a_j \chi_{B_j}$, then by continuity from below we have
+$$lim_{n\to\infty} \alpha \int_{E_n} \phi dm = \lim_{n\to\infty} \alpha \sum a_j m(B_j \cap E_n) = \alpha \sum a_j m(B_j) = \alpha \int \phi dm$$. 
+So
+$$\lim_{n\to\infty} \int f_n dm \geq \alpha \int \phi dm$$,
+and since $0 \leq \phi \leq f$ was arbitrary, we have
+$$\lim_{n\to \infty} \int f_n dm \geq \alpha \int f dm$$. Letting $\alpha \to 1$ completes the proof.
+\end{proof}
+\begin{remark}
+The definition of $\int f dm$ involves the $\sup$ over a most likely uncountable set, so it is in practice hard to compute. The Monotone Convergence Theorem allows us to reduce this to a simple limit, in particular, we know $\forall f \in L^{+}, \exists (\phi_n)_{n\in\naturals}$ of simple functions such that $0 \leq \phi_1 \leq \phi_2 \leq \dots \leq f$ such that $\lim_{n\to\infty} \phi_n = f$
+\end{remark}
+\begin{theorem}
+For $(f_n)_{n\in\naturals} \subseteq L^{+}$, 
+$$\int \sum_{n=1}^\infty f_n dm = \sum_{n=1}^{\infty} \int f_n dm$$
+\end{theorem}
+\begin{proof}
+First, we claim $\int f_1 + f_2 dm = \int f_1 dm + \int f_2 dm$. By the above remark and the MCT $\exists (\phi_k)_{k\in\naturals}, (\psi_k)_{k\in\naturals}$ of simple functions whose limit is $f_1$ and $f_2$ respectively. Note that $0 \leq \phi_k + \psi_k \leq f_1 + f_2$ and
+$$\lim_{k\to\infty} (\phi_k + \psi_k) = (f_1 + f_2)$$.
+Hence by the MCT we have:
+$$\int(f_1 + f_2)dm = \lim_{k\to\infty} \int \phi_k + \psi_k dm = \lim_{k\to\infty}(\int \phi_k dm + \int \psi_k dm) = \int f_1dm + \int f_2 dm$$
+By an inductive argument, we then have 
+$$\int \sum_{n=1}^N f_n dm = \sum_{n=1}^N \int f_n dm$$. 
+Then applying the MCT again yields
+$$ \sum_{n=1}^\infty \int f_n dm = \lim_{N\to\infty} \sum_{n=1}^N \int f_n dm = \lim_{N\to\infty} \int \sum_{n=1}^N f_n dm = \int \sum_{n=1}^\infty f_n dm$$
+\end{proof}
+\begin{prop}
+If $f \in L^{+}$, then $\int f dm = 0$ iff $f = 0$ a.e.
+\end{prop}
+\begin{proof}
+If $f$ is simple, say $f = \sum a_j \chi_{E_j}$, then $\int f dm = 0 \Leftrightarrow \sum a_j m(E_j) = 0 \Leftrightarrow $ for each $j$ either $a_j = 0$ or $E_j$ is a zero set which is equivalent to $f = 0$ a.e. More generally, suppose $f=0$ a.e. If $0 \leq \phi \leq f$ is simple, then $\phi = 0$ a.e. Thus $\int \phi dm = 0$ and so
+$$\int f dm = \sup\{\int \phi dm : 0 \leq \phi \leq f, \phi \text{is simple}\} = \sup \{0: ``''\} = 0$$. 
+Conversely, suppose $\int fdm = 0$. Let $E_n = \{x : f(x) > \frac{1}{n}\}$. Then $E_1 \subseteq E_2 \subseteq \dots$ and $E \coloneqq \{x : f(x) > 0\} = \cup_{n=1}^\infty E_n$. If $f \neq 0$ a.e., then $m(E) > 0$, and by continuity from below we have
+$$m(E) = \lim_{n\to\infty} m(E_n)$$, and so $\exists n\in\naturals$ such that $m(E_n) > 0$. But then $\phi \coloneqq \frac{1}{n} \chi_{E_n} \leq f$ and so
+$$\int f dm \geq \int \phi dm = \frac{1}{n} m(E_n) > 0$$, which is a contradiction. 
+\end{proof}
+\begin{corollary}
+If $f, g \in L^{+}$ satisfy $f = g$ a.e., then $\int f dm = \int g dm$.
+\end{corollary}
+\begin{corollary}
+If $f, g \in L^{+}$ and $f \in L^{+}$ are such that $f_1 \leq f_2 \leq \dots \leq f$ and $f(x) = \sup f_n(x)$ a.e., then $\int fdm = \lim_{n\to\infty} \int f_n dm$
+\end{corollary}
+\begin{proof}
+Let $E = \{x: f(x) = \sup f_n(x)\}$. Then $m(E^c) = 0$ and hence $f = f\chi_E$ and $f_n = f_n\chi_E$ a.e. By the previous corollary and the MCT:
+$$\int f dm = \int_E f dm = \lim_{n\to\infty} \int_E f_n dm = \lim_{n\to\infty} \int f_n dm$$.
+\end{proof}
+\begin{remark}
+The hypothesis ``$f_1 \leq f_2 \leq \dots$'' in the MCT cannot be readily discarded. For example, $\chi_{(n, n+1)} \to 0$ but $\int \chi_{(n, n+1)} dm = 1$ and $n\chi_{(0, \frac{1}{n})} \to 0$ but $\int n\chi_{(0, \frac{1}{n})} dm = 1$. These examples demonstrate the area under the graph ``escaping to infinity''.
+\end{remark}
+
+\begin{theorem}[Fatau's Lemma]
+For any $(f_n)_{n\in\naturals} \subseteq L^{+}$,
+$$\int \liminf_{n\to\infty} f_n dm \leq \liminf_{n\to\infty} \int f_n dm$$
+\end{theorem}
+\begin{proof}
+For $N\in\naturals$, $\inf_{n\geq N} f_n \leq f_k$ for all $k\geq N$. Thus by monotonicity of the integral we have
+$$\int \inf_{n\geq N} f_n dm \leq \int f_k dm$$
+ for all $k \geq N$. Therefore,
+ $$\int \inf_{n\geq N} f_n dm \leq \inf_{n\geq N} \int f_n dm$$.
+ The MCT then implies $$\int \liminf{n\to\infty} f_n dm = \int \lim_{N\to\infty} \inf_{n\geq N} f_n dm = \lim_{N\to\infty} \int \inf{n\geq N} f_n dm \leq \liminf_{n\to\infty} \int f_n dm$$
+\end{proof}
+\begin{corollary}
+If $(f_n)_{n\in\naturals} \subseteq L^{+}$, $f\in L^{+}$, and $f_n \to f$ a.e. then
+$$\int f dm \leq \liminf_{n\to\infty} \int f_n dm$$
+\end{corollary}
+\begin{proof}
+If $f_n \to f$ everywhere, then by Fatau's Lemma we are done. We can achieve this by modifying the $f_n$'s and $f$ on a measure zero set, which does not affect the integrals.
+\end{proof}
+
+\section{Integrating $\reals$-valued Functions}
+Suppose $f: \reals^d \to \reals$ is lebesque measurable. Then if $E = \{x\in \reals^d : f(x) \geq 0\} = f^{-1}([0, \infty))$, we have $E \in \scriptm$ and so $f_{+} = f\chi_E$ and $f_{-} = -f\chi_{E^c}$ are elements of $L^{+}$ with $f = f_{+} - f_{-}$. We want to define the lebesque integral of $f$ as $\int f_{+} dm - \int f_{-}dm$ but if $\int f_{\pm} dm = \infty$, we cannot make sense of ``$\infty - \infty$''. However, note that $|f| = f_{+} + f_{-} \in L^{+}$. If $\int |f|dm < \infty$, then $\int f_{\pm}dm < \infty$ and so we can reconcile $\int f_{+}dm - \int f_{-}dm$.
+
+\begin{definition}
+We say a Lebesque measurable function $f: \reals^d \to \reals$ is Lebesque integrable if $\int |f| dm < \infty$. In this case, we define the Lebesque integral of $f$ to be the quantity $\int f dm \coloneqq \int f_{+} dm - \int f_{-} dm$. We denote by $L^1(\reals^d, m)$ the set of Lebesque integrable functions.
+\end{definition}
+\begin{prop}
+If $f\in L^1(m)$, then $|\int f dm| \leq \int |f|dm$.
+\end{prop}
+\begin{proof}
+$|\int f dm| = | \int f_{+}dm - \int f_{-}dm| \leq \int f_{+}dm + \int f_{-}dm = \int |f| dm$
+\end{proof}
+
+\begin{prop}
+Let $f, g \in L^1(m)$, the following are equivalent:
+\begin{enumerate}
+	\item $\int_E f dm = \int_E g dm$ for all $E \in \scriptm$
+	\item $\int |f - g| dm = 0$
+	\item $f = g$ a.e.
+\end{enumerate}
+\end{prop}
+\begin{proof} The proofs for each direction are as follows:
+\begin{enumerate}
+	\item[(i)$\Rightarrow$ (ii):] We have $\int |f -g| dm = \int (f - g)_+ dm + \int (f-g)_- dm$. Let
+	$$E_{+} = \{x : f(x) \geq g(x)\}$$
+	and $$E_{-} = \{x : f(x) \leq g(x)\}$$
+	Then $(f-g)_{\pm} = (f-g)\chi_{E_\pm}$. Thus
+	$$\int (f -g)_\pm dm = \int (f-g)\chi_{E_\pm} = \int_{E_\pm} (f-g) dm = 0$$. So $\int |f - g| dm = 0$ 
+	\item[(ii)$\Rightarrow$ (iii)] $\int |f - g| dm \Rightarrow |f - g| = 0 a.e. \Rightarrow f = g a.e.$
+	\item[(iii)$\Rightarrow$ (i)] $f = g$ a.e $\Rightarrow f\chi_E = g\chi_E$ a.e. $\forall E \in \scriptm \Rightarrow$ (i).
+\end{enumerate}
+\end{proof}
+\begin{remark}
+This proposition tells us that with respect to integration, modifying functions on measure zero sets has no effect. Hence, since $\int |f| dm < \infty \Rightarrow f$ is finite a.e., we can treat every $f \in L^1(m)$ as finitely valued everywhere by setting it to, say, 0 wherever it was originally infinitely valued. In fact, we can go further: we can redefine $L^1(m)$ as the set of equivalence classes of Lebesque integrable functions under the equivalence realtion $f ~ g \Leftrightarrow f =g$ a.e.
+
+\textbf{Advantage:} In this case, for $f,g\in L^1(m)$ we have $\int |f -g | dm = 0$ iff $f = g$ (as equivalence classes). Consequently, $L^1(m)$ is a metric space with metric $d(f, g) \coloneqq \int|f-g| dm$. 
+
+\textbf{Disadvantage:} It no longer makes sense to discuss the value of $f\in L^1(m)$ at a point, since up to a.e. equivalence, the value can be anything.
+\end{remark}
+\begin{theorem}[Dominated Convergence Theorem]
+Let $(f_n)_{n\in\naturals}\subseteq L^1(m)$ be a sequence such that $f_n \to f$ a.e. and $\exists g\in L^1(m)$ such that $|f_n| \leq g$ a.e. for all $n\in\naturals$. 
+
+Then $f \in L^1(m)$ with $\int fdm = \lim_{n\to\infty} \int f_n dm$.
+\end{theorem}
+\begin{proof}
+By an earlier proposition, $f$ is measurable, and $|f| \leq |g|$ a.e. Hence, $\int |f|dm \leq \int |g|dm < \infty$, so $f \in L^1(m)$. Note that $g \pm f \geq 0$ a.e. So by Fatau's Lemma we have
+$$\int g dm \pm \int f dm = \int (g \pm f) dm \leq \liminf_{n\to\infty} \int (g\pm f_n) dm = \int g dm + \liminf_{n\to\infty} \int (\pm f) dm$$
+So, subtracting $\int g dm$ which is finite from each side, we have $$\int f dm \leq \liminf_{n\to\infty} \int f_n dm$$ and
+$$-\int f dm \leq -\limsup_{n\to\infty}\int f_n dm$$
+Thus $$\int f dm \leq \liminf_{n\to\infty} \int f_n dm \leq \limsup_{n\to\infty} \int f_n dm \leq \int f dm$$
+So all the inequalities are equalities implying $\lim_{n\to\infty} \int f_n dm$ exists and equals $\int f dm$. 
+\end{proof}
+\begin{theorem}
+Suppose $(f_n)_{n\in\naturals}\subseteq L^1(m)$ satisfies $\sum_{n=1}^\infty \int |f_n|dm < \infty$. Then $\sum_{n=1}^\infty f_n$ converges a.e. to a function in $L^1(m)$ and $\int \sum_{n=1}^\infty f_n dm = \sum_{n=1}^\infty \int f_n dm$. 
+\end{theorem}
+\begin{proof}
+By the first theorem after the MCT
+$$\int \sum_{n=1}^\infty |f_n| dm = \sum_{n=1}^\infty \int |f_n| dm < \infty$$. 
+So $g = \sum_{n=1}^\infty |f_n| \in L^1(m)$. Recall that this implies $g$ is finite a.e. and so the series converges a.e. Since $|\sum_{n=1}^N f_n| \leq \sum_{n=1}^N |f_n| \leq g$, the DCT implies
+$$\int \sum_{n=1}^\infty f_n dm = \int \lim_{N\to\infty} \sum_{n=1}^N f_n dm = \lim_{N\to\infty} \int \sum_{n=1}^N f_n dm = \lim_{N\to\infty} \sum_{n=1}^N \int f_n dm = \sum_{n=1}^\infty \int f_n dm$$.
+\end{proof}
+\begin{theorem}
+If $f \in L^1(m)$, for any $\epsilon > 0, \exists \phi \in L^1(m)$ simple such that $\int |f - \phi| dm < \epsilon$.
+\end{theorem}
+\begin{proof}
+Recall we proved $\exists (\phi_k)_{k\in\naturals}$ simple such that $0 \leq |\phi_1| \leq |\phi_2| \leq \dots \leq |f|$ such that $\phi_k \to f$ pointwise. Then $|f - \phi_k| \leq |f| + |\phi_k| \leq 2|f| \in L^1(m)$ and $|f - \phi_k| \to 0$ pointwise. So by the DCT
+$$\lim_{k\to\infty} \int |f - \phi_k|dm = \int 0 dm = 0$$. Thus $\forall \epsilon > 0, \exists k\in\naturals$ such that $\phi=\phi_k$ satisfies $\int | f- \phi| dm < \epsilon$.
+\end{proof}
+\begin{remark}
+This says that simple functions are dense in the metric space $(L^1(m), \int|\cdot - \cdot| dm)$.
+\end{remark}
+\begin{theorem}
+If $f\in L^1(m)$ for any $\epsilon > 0$, $\exists g$ continuous and completely supported such that $|f - g| dm < \epsilon$.
+\end{theorem}
+\begin{proof}
+Step 1
+Suppose $f = \chi_E$ for $E\in \scriptm$ with $m(E) = \int \chi_E dm < \infty$. By continuity from below,
+$$m(E) = \lim_{n\to\infty} m(E \cap B(0, n))$$. So $\exists n\in \naturals$ such that $m(E\cap B(0, n)) > m(E) - \frac{\epsilon}{2}$. Denote $E_0 \coloneqq E \cap B(0, n)$. Observe that
+$$\int | \chi_{E_0} - \chi_E | dm = \int \chi_{E\setminus E_0} dm = m(E \setminus E_0) = m(E) - m(E_0) < m(E) - m(E) + \frac{\epsilon}{2} = \frac{\epsilon}{2}$$
+Now since $E_0 \in \scriptm$, $\exists$ a $G_\delta$ set and an $F_\sigma$ set, $G = \cap_{i=1}^\infty U_i$, where $U_i$ are open and $F = \cup_{j=1}^\infty V_j$ where $V_j$ are closed, such that $m(G) = m(F) = m(E_0)$ and $F \subseteq E_0 \subseteq G$. Since $E_0$ is bounded, our original construction ensured each $U_i$ is bounded. By continuity from above and below respectively, we have
+$$m(E_0) = \lim_{I\to\infty} m(\cap_{i=1}^I U_i)$$
+$$m(E_0) = \lim_{J\to\infty} m(\cup_{j=1}^J V_j)$$ So $\exists I, J \in\naturals$ such that $m(\cap_{i=1}^I U_i) < m(E_0) + \frac{\epsilon}{4}$ and $m(\cup_{i=1}^J V_j) > m(E_0) - \frac{\epsilon}{4}$. Set $U = \cap_{i=1}^I U_i$ and $V = \cup_{j=1}^J V_j$. Then $V \subseteq E_0 \subseteq U$ and
+$$m(U\setminus V) = m(U) - m(V) < m(E_0) + \frac{\epsilon}{4} - m(E_0) + \frac{\epsilon}{4} = \frac{\epsilon}{2}$$. Define
+$$g(x) = \frac{d(x, U^c)}{d(x, U^c) + d(x, V)}$$
+ where for a set $S$, $d(x, S) = \inf\{d(x,y) : y\in S\}$. It follows that $0\leq g \leq 1$, $g|_{U^c} = 0$, $g|_V = 1$, and $g$ is continuous. Then
+ $$\int |g - \chi_{E_0}| dm \leq \int \chi_{U\setminus V} dm = m(U\setminus V) = \frac{\epsilon}{2}$$. This in combination with the first integral inequality yields $\int |\chi_E - g| dm < \epsilon$.
+
+Step 2
+Let $f\in L^1(m)$ be arbitrarry. By the previous theorem, $\exists \phi \in L^1(m)$ simple such that $\int |f - \phi| dm < \frac{\epsilon}{2}$. Suppose $\phi = \sum_{j=1}^N a_j \chi_{E_j}$. Then applying Step 1, for each $j$ we find $g_j$ continuous with compact support and
+$$\int | g_j - \chi_{E_j}| dm < \frac{\epsilon}{2N|a_j|}$$
+ Then $g  = \sum_{j=1}^N a_j g_j$ is still continuous with compact support, and
+ $$\int |\phi - g| dm \leq \sum_{j=1}^N |a_j| \int |\chi_{E_j} - g_j| dm < \sum_{j=1}^N |a_j| \frac{\epsilon}{2N|a_j|} = \frac{\epsilon}{2}$$
+ Thus
+ $$\int |f - g| dm \leq \int |f - \phi| dm + \int |\phi - g| dm < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon$$
+\end{proof}
+\begin{remark}
+This theorem says that continuous, compactly supported functions are dense in the metric space $(L^1(m), \int |\cdot - \cdot| dm)$
+\end{remark}
+
+\begin{definition}
+For $f \in L^1(m)$ define its $L^1$-norm by $||f||_1 \coloneqq \int |f| dm$. Note that $|| \cdot ||_1$ is a valid norm:
+\begin{enumerate}
+	\item $||cf||_1 = \int |c||f|dm = |c|\int|f|dm = |c|||f||_1$
+	\item $||f||_1 = 0 \Leftrightarrow \int |f|dm = 0 \Leftrightarrow f= 0$ a.e. $\Leftrightarrow f = 0$ in $L^1(m)$
+	\item $||f + g||_1 = \int|f+g|dm \leq \int |f| + |g| dm = ||f||_1 + ||g||_1$
+\end{enumerate}
+\end{definition}
+\begin{lemma}
+Let $(V, ||\cdot||)$ be a normed vector space. Then it is complete iff every absolutely convergent series converges.
+\end{lemma}
+\begin{proof}
+\begin{enumerate}
+	\item[($\Rightarrow$)] Suppose $(V, ||\cdot||)$ is complete. Let $(x_n)_{n\in\naturals}\subseteq V$ such that the series $\sum_{n=1}^\infty ||x_n||$ converges. Then for $\epsilon > 0$, $\exists N_0 \in\naturals$ such that
+	$$\sum_{n=N_0}^\infty ||x_n|| < \epsilon$$
+	Consequently, $\forall N, M \geq N_0, N\leq M$ we have,
+	$$||\sum_{n=1}^N x_n - \sum_{n=1}^M x_n || = ||\sum_{n=N+1}^M x_n|| \leq \sum_{n=N+1}^M ||x_n|| \leq \sum_{n=N_0}^M ||x_n|| < \epsilon$$. That is $(\sum_{n=1}^N x_n)_{N\in\naturals}$ is a Cauchy sequence, hence it converges since $V$ is complete. So
+	$$\lim_{N\to\infty} \sum_{n=1}^N x_n = \sum_{n=1}^\infty x_n$$
+	\item[$\Leftarrow$] Let $(x_n)_{n\in\naturals}$ be a Cauchy sequence. It suffices to show that it has a convergent subsequence. We can find increasing integers $n_1 < n_2 < \dots$ such that $\forall n, m \geq n_k$
+	$$||x_n - x_m || < 2^{-k}$$ 
+	Now define $y_1 = x_{n_1}$, and $y_k = x_{n_k} - x_{n_{k=1}} \forall k \geq 2$. Observe that
+	$$\sum_{k=1}^K y_k = x_{n_1} + \sum_{k=2}^K (x_{n_k} - x_{n_{k-1}}) = x_{n_K}$$
+	Now,
+	$$\sum_{k=1}^\infty ||y_k|| \leq ||y_1|| + \sum_{k=2}^\infty 2^{-(k - 1)} = ||y_1|| + 1 < \infty$$
+	Thus by our hypothesis, $\sum_{k=1}^\infty y_k converges$. This means $$(\sum_{k=1}^K y_k)_{K\in\naturals} = (x_{n_k})_{k\in\naturals}$$ converges. 
+	Thus $(x_n)_{n\in\naturals}$ converges and so $(V, ||\cdot||)$ is complete. 
+\end{enumerate}
+\end{proof}
+\begin{theorem}
+$L^1(m)$ equipped with the $L^1$-norm is a Banach space, a complete normed vector space.
+\end{theorem}
+\begin{proof}
+We know $L^1(m)$ is a vector space over $\reals$, so it remains to show it is complete. By the Lemma, it suffices to consider absolutely convergent series. Let $(f_n)_{n\in\naturals}\subseteq L^1(m)$ be absolutely convergent.
+ $$B\coloneqq \sum_{n=1}^\infty ||f_n||_1 < \infty$$
+ Define $G = \sum_{i=1}^\infty |f_n|$ and $G_N = \sum_{n=1}^N |f_n|$. Then by the MCT
+ $$\int G dm = \lim_{N\to\infty} \int G_N \leq B < \infty$$ 
+ So $G\in L^1(m)$ and in particular $G < \infty$ a.e. Consequently, $\sum_{n=1}^\infty f_n$ converges a.e. Set $F = \sum_{n=1}^\infty f_n$. So that $|F| \leq G$ and have $F \in L^1(m)$. Moreover, for each $N\in \naturals$
+ $$|F - \sum_{n=1}^\infty f_n| \leq |F| + \sum_{n=1}^N |f_n| \leq 2|G| \in L^1(m)$$
+ So by the DCT
+ $$\lim_{N\to\infty} ||F - \sum_{n=1}^N f_n||_1 = \lim_{N\to\infty} \int |F - \sum_{n=1}^N | dm = \int \lim_{N\to\infty} |F - \sum_{n=1}^N f_n| dm = \int 0 dm = 0$$
+ Thus $(\sum_{n=1}^N f_n)_{N\in\naturals}$ converges to $F$ w.r.t $||\cdot||_1$.
+\end{proof}
+\section{Modes of Convergence}
+\begin{definition}
+For $f, (f_n)_{n\in\naturals} \subseteq L^1(m)$ we say $f_n \to f$ in $L^1$ if $||f_n - f||_1 \to 0$.
+\end{definition}
+We have seen that $f_n \to f$ a.e. does not imply $f_n \to f$ in $L^1$:
+\begin{itemize}
+	\item $f_n = \chi_{(n, n+1)}$
+	\item $f_n = n\chi_{(0, \frac{1}{n})}$
+	\item $f_n = \frac{1}{n}\chi_{(0, n)}$
+\end{itemize}
+It is also true that $f_n \to f$ in $L^1$ does not imply $f_n \to f$ a.e.
+\begin{example}[Type-writer Sequence]
+Define a sequence $(x_n)_{n\in\naturals} \subseteq \rationals \cap [0, 1]$.
+$$x_0 = \frac{0}{1}, x_1 = \frac{1}{1}, x_2 = \frac{0}{2}, x_3 = \frac{1}{2}, x_4 = \frac{2}{2}, x_5 = \frac{0}{3}, x_6 = \frac{1}{3}, \dots $$
+Let
+$$ f_n = \begin{cases}
+\chi_{[x_{n-1}, x_n]} & \text{if } x_{n-1} < x_n \\
+\chi_{[x_n, x_{n-1}]} & \text{otherwise} \\
+\end{cases}$$
+Then $||f_n||_1 = \int |f_n| dm = \frac{1}{m}$ for some $m\in \naturals$ where $m\to \infty$ as $n\to \infty$. Thus $f_n\to 0$ in $L^1$. However, $\forall x \in [0, 1]$, there are infinitely many $n\in\naturals$ such that $f_n(x) = 1$. So $f_n\not\to 0$ a.e.
+\end{example}
+\begin{definition}
+For $f, (f_n)_{n\in\naturals}\subseteq L^1(m)$, we say $f_n$ converges to $f$ in measure if $\forall \epsilon > 0$,
+$$\lim_{n\to\infty} m(\{x\in \reals^d : |f_n(x) - f(x)| > \epsilon\}) = 0$$
+\end{definition}
+\begin{prop}
+If $f_n\to f$ in $L^1$, then $f_n \to f$ in measure.
+\end{prop}
+\begin{proof}
+Define 
+$$E_{n, \epsilon} \coloneqq \{x\in\reals^d : |f_n(x) - f(x)| \geq \epsilon\}$$. 
+Then
+$$\int |f_n - f| dm \geq \int_{E_{n, \epsilon}} |f_n - f| dm \geq \int_{E_{n,\epsilon}} \epsilon dm = \epsilon m(E_{n,\epsilon})$$
+Thus,
+$$m(E_{n,\epsilon}) \leq \frac{1}{\epsilon} \int |f_n - f| dm$$.
+Therefore,
+$$\lim_{n\to\infty} m(E_{n,\epsilon}) \leq \frac{1}{\epsilon} \lim_{n\to\infty} ||f_n - f||_1 = 0$$
+\end{proof}
+\begin{theorem}
+Suppose $f_n \to f$ in measure. Then there exists a subsequence $(f_{n_k})_{k\in\naturals}$ such that $f_{n_k}\to f$ a.e.
+\end{theorem}
+\begin{proof}
+For each $k\in\naturals$, choose $n_k$ such that if 
+$$E_k \coloneqq \{x: |f_{n_k} - f| \geq 2^{-k}\}$$
+Then $m(E_k) \leq 2^{-k}$. Since $\sum m(E_k) \leq \sum 2^{-k} < \infty$. The Borel-Cantelli Lemma implies
+$$S\coloneqq \cap_{N\in\naturals} \cup_{k\geq N} E_k, m(S) = 0$$
+Notice that
+$$S^c = \cup_{N\in\naturals} \cap_{k\geq N} \{x : |f_{n_k} - f| < 2^{-k}\}$$
+So for $x \in S^c$, there exists $N \in\naturals$ such that $\forall k\geq N, |f_{n_k}(x) - f(x)| < 2^{-k}$. Thus,
+$$\lim_{k\to\infty} |f_{n_k}(x) - f(x)| \leq \lim_{n\to\infty} 2^{-k} = 0$$
+That is $f_{n_k}\to f$ on $S^c$. Since $S$ is a zero set, this implies $f_{n_k} \to f$ a.e.
+\end{proof}
+\begin{theorem}[Egorov's Theorem]
+Let $E\in\scriptm$ be such that $m(E) < \infty$. Suppose $f_n \to f$ a.e. on $E$. Then $\forall \epsilon > 0$ there exists an $F \subseteq E$ such that $m(F) < \epsilon$ and $f_n\to f$ uniformly on $E\setminus F$.
+\end{theorem}
+\begin{proof}
+By modifying $f_n, f$ we may assume $f_n \to f$ everywhere on $E$. Then for each $n, k \in \naturals$, define
+$$ E_n(k) \coloneqq \cup_{j = n}^\infty \{x: |f_j(x) - f(x)| \geq \frac{1}{k}\}$$
+Then for fixed $k$, 
+$$ E_1(k) \supseteq E_2(k) \supseteq \dots$$
+and $\cap_{n = 1}^\infty E_n(k) = \O$. Since $x$ is in this intersection iff $\forall n\in\naturals \exists j \geq N$ such that $|f_j(x) - f(x)| \geq \frac{1}{k}$, that is $f_n(x) \not\to f(x)$. Now since $m(E_1(k))\leq m(E) < \infty$, continuity from above implies
+$$\lim_{n\to\infty} m(E_n(k)) = 0$$
+Let $\epsilon > 0$ and let $k\in\naturals$ be arbitrary. Choose $n_k \in \naturals$ large enough such that $m(E_{n_k}(k)) < \epsilon 2^{-k}$. Set
+$$E = \cup_{k=1} E_{n_k}(k)$$
+So that,
+$$ m(E) \leq \sum_{k=1}^\infty m(E_{n_k}(k)) < \sum_{k=1}^\infty \epsilon 2^{-k} = \epsilon$$
+Also,
+$$ E^c = \cap_{k=1}^\infty E_{n_k}(k)^c = \cap_{k=1}^\infty \cap_{j=n_k}^\infty \{x: |f_j(x) - f(x)| < \frac{1}{k}\}$$
+So for $x \in E^c$, we have for all $k\in\naturals$ and $j\geq n_k, |f_j(x) - f(x)| < \frac{1}{k}$. Thus for all $\delta > 0$, letting $\frac{1}{k} < \delta$, we have $\forall j\geq n_k, |f_j(x) - f(x)| < \frac{1}{k} < \delta$. That is $f_n \to f$ uniformly on $E^c$. 
+\end{proof}
+\end{document}
