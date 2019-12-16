@@ -1,0 +1,310 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{mathtools}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{example}{Example}[section]
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{remark}
+\newtheorem*{notation}{Notation}
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand{\interior}[1]{%
+  {\kern0pt#1}^{\mathrm{o}}%
+}
+
+\def\homo{{\simeq}}
+\def\id{{\mathbb 1}}
+
+\def\reals{{\mathbb R}}
+\def\scriptm{{\mathcal M}}
+\def\integers{{\mathbb Z}}
+\def\naturals{{\mathbb N}}
+\def\rationals{{\mathbb Q}}
+
+\title{142 Algebraic Topology Notes}
+
+\begin{document}
+
+\section{Random Topological Facts}
+
+\begin{definition}[Limit Point]
+    Let $A$ be a subset of a topological space $X$, call point $p$ of $X$ a \textit{limit point} of $A$ if every neighborhood of $p$ contains at least one point of $A - \{p\}$. 
+\end{definition}
+
+\begin{lemma}[Lebesgue's Lemma]
+    Let $X$ be a compact metric space and $\mathcal{F}$ an open cover of $X$. Then there is some $\delta > 0$, such that any subset of $X$ of diameter less than $\delta$ is contained in some member of $\mathcal{F}$.
+\end{lemma}
+
+\begin{theorem}[Connectedness]
+    The following are all equivalent:
+    \begin{enumerate}
+        \item $X$ is connected.
+        \item The only clopen subsets of $X$ are $X$ and the empty set.
+        \item $X$ cannot be expressed as the disjoint union of two nonempty open sets.
+        \item There is no onto continuous function from $X$ to a discrete space which contains more than one point.
+    \end{enumerate}
+\end{theorem}
+
+Remark: note that path-connected implies connected, but connected doesn't imply path-connected.
+
+\begin{definition}[Fine/Coarse Topologies]
+    A topology $\tau_1$ is said to be coarser than a topology $\tau_2$ iff $\tau_1 \subseteq \tau_2$. And called finer if the opposite is true.
+\end{definition}
+
+\section{Identification Spaces (Quotient Spaces)}
+
+\begin{definition}[Final Topology]
+    Let $X$ be a set, and $\{Y_{\alpha}\}_{\alpha}$ be a family of topological spaces, each with an associated map $f_{\alpha}: Y_{\alpha} \to X$. Then the final topology on $X$ is the finest topology that makes all the $f_{\alpha}$ continuous. 
+\end{definition}
+
+\begin{definition}[Identification Space / Quotient Space]
+    Suppose we have a topological space $X$, and a family of disjoint nonempty subsets of $X$ such that the union of them is equal to $X$. Then the Identification space is defined as the topological space formed by assigning each point of $X$ to the subset it belongs to in the family of subsets, such that the topology on the new space $Y$ is the final topology under the map that sends points to their subsets.
+\end{definition}
+
+\begin{definition}[Identification map]
+    A map $f: X \to Y$ which is onto, is said to be an identification map if $Y$ has the final topology w.r.t. $f$. 
+\end{definition}
+Suppose $f: X \to Y$ is an onto map. Then if $f$ maps open sets to open sets, or closed sets to closed sets, or $X$ is compact and $Y$ is Hausdorff, then $f$ is an identification map. 
+
+\begin{lemma}[Glueing Lemma]
+    Suppose $X, Y$ are subsets of a topological space, and $f: X \to Z$ and $g: Y \to Z$ are continuous. If $X$ and $Y$ are closed in $X \cup Y$, then the function $f \cup g: X \cup Y \to Z$, such that $f\cup g(x) = f(x)$ for $x \in X$ and $f \cup g (y) = g(y)$ for $y \in Y$, is continuous. 
+\end{lemma}
+
+\section{Topological Group and Orbit Spaces}
+
+\begin{definition}[Topological Group]
+    A topological group $G$ is both a Hausdorff topological space and a group, such that group multiplication $m: G\times G \to G$ and the function sending each element to its inverse $i: G \to G$ are continuous.
+\end{definition}
+
+\begin{theorem}
+    Let $G$ be a topological group and let $K$ be the connected component of $G$ that contains the identity. Then $K$ is a closed normal subgroup of $G$.
+\end{theorem}
+
+Here are some abstract algebra reminders:
+
+\begin{definition}[Subgroup]
+If $K$ is a subset of $G$, then $K$ is a subgroup of $G$, if the restriction of the group operation to $K$ makes $K$ a group. An equivalent condition is that $KK^{-1} \subseteq K$. 
+\end{definition}
+\begin{definition}[Normal subgroup]
+    A subgroup is a normal subgroup if for each $k \in K$ and $g\in G$, $gkg^{-1} \in K$. 
+\end{definition}
+
+Back to Algebraic Topology:
+
+Some examples of topological groups:
+\begin{enumerate}
+        \item $GL(n)$ is a topological group consisting of all invertible $n\times n$ matrices.
+        \item $O(n)$ is a topological group consisting of all orthogonal $n\times n$ matrices.
+        \item $SO(n)$ is a topological group consisting of all orthogonal $n\times n$ matrices with determinant positive $1$.
+\end{enumerate}
+
+\begin{definition}[Group Action]
+    A topological group $G$ is said to act as a group of homeomorphisms on a space $X$ if each group element induces a homeomorphism of the space such that:
+    \begin{enumerate}
+        \item $hg(x) = h(g(x))$ for all $g, h \in G$ and all $x \in X$.
+        \item $e(x) = x$ for all $x \in X$, where $e$ is the identity of $G$.
+        \item the function $G \times X \to X$ such that $(g, x) \mapsto g(x)$ is continuous.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Orbit Space]
+    Suppose we have a topological group $G$ acting on $X$. Let $x \in X$. Then the set of all images, $g(x)$, where $g$ varies through $G$, is said to be the orbit of $x$. If we take the partition of $X$ such that each member of the partition is the orbit of some $x \in X$, then the corresponding identification space is called the orbit space, denoted $X \setminus G$. In other words, the orbit space is constructed by identifying two points if they differ by a homeomorphism, i.e. $x = g(y)$ for some $g \in G$. 
+\end{definition}
+
+\section{Fundamental Group}
+
+\begin{definition}[Homotopic Maps]
+    Let $f, g: X \to Y$ be maps. Then $f$ is homotopic to $g$ relative to a subset $A$ of $X$, if there exists a map $F: X \times I \to Y$ such that $F(x, 0) = f(x)$ and $F(x, 1) = g(x)$ and $F(a, t) = f(a)$. 
+\end{definition}
+
+The idea of homotopic maps creates an equivalence relation on the set of all functions from $X$ to $Y$. We can consider this equivalence relation in terms of loops in topological spaces starting at some base point $p$. Then $<\alpha>$ is the equivalence class under homotopy of some loop $\alpha$. The set of homotopy classes of loops starting at $p$, forms a group under the operation of loop multiplication, where multiplying two loops consists of putting one loop after the other. This group is called the fundamental group of $X$ based at $p$ and is denoted $\pi_1(X, p)$.
+
+\begin{theorem}
+    If $X$ is path connected then $\pi_1(X, p)$ is isomorphic to $\pi_1(X, q)$.
+\end{theorem}
+
+For any continuous function from $X$ to $Y$, we can construct an induced homomorphism, $f_{*}: \pi_1(X, p) \to \pi_1(Y, f(p))$.
+
+Note that homeomorphic spaces have isomorphic fundamental groups.
+
+\section{Path and Homotopy Lifting for the circle}
+
+\begin{lemma}[Path-lifting lemma]
+    If $\sigma$ is a path in $S^1$ which begins at the point $1$, then there is a unique path $\tilde{\sigma}$ in $\reals$ which begins at $0$ and satisfies $\pi \circ \tilde{\sigma} = \sigma$, where $\pi: \reals \to S^1$ is the identification map.
+\end{lemma}
+
+\begin{lemma}[Homotopy-lifting lemma]
+    If $F: I \times I \to S^1$ is a map such that $F(0, t) = F(1, t)$ for $0 \leq t \leq 1$, then there is a unique map $\tilde{F}: I \times I \to \reals$ such that $\pi \circ \tilde{F} = F$ and $\tilde{F}(0, t) = 0$. 
+\end{lemma}
+
+\section{Covering Spaces and Homotopy Type}
+
+\begin{theorem}[Orbit Space Fundamental Group]
+    If $G$ acts on a simply connected space $X$, and for each $x \in X$, there is a neighborhood $U$ of $x$, such that $U \cap g(U)$ for each $g\in G - \{e\}$, then $\pi_1(X/G)$ is isomorphic to $G$.
+\end{theorem}
+
+\begin{definition}[Covering Space/Map]
+    Given a map $\pi: X \to Y$, we say $\pi$ is a covering map and $X$ a covering space, if for each $y \in Y$ there exists an open neighborhood $V$ such that $\pi^{-1}(V)$ is the union of pairwise disjoint open sets $\{U_{\alpha}\}$, and the restriction of $\pi$ to any $U_{\alpha}$ is a homeomorphism onto $V$. 
+\end{definition}
+
+\begin{definition}[Homotopy Type/ Homotopy Equivalent]
+    Two spaces $X$ and $Y$, have the same homotopy type, or are homotopy equivalent, if there exists maps $f: X \to Y$ and $g: Y \to X$, such that $g\circ f$ is homotopic to the identity on $X$ and $f \circ g$ is homotopic to the identity on $Y$. 
+\end{definition}
+
+\begin{theorem}
+    Path-connected spaces with the same homotopy type have isomorphic fundamental groups.
+\end{theorem}
+
+\begin{definition}[Deformation Retract]
+    A homotopy $G: X \times I \to X$ which is relative to a subset $A$, and which satisfies $G(x, 0) = x$ and $G(x, 1) \in A$ for all $x \in A$, is called a deformation retraction of $X$ onto $A$. 
+\end{definition}
+
+\begin{definition}[Contractible]
+    A space is called contractible if the identity map is homotopic to the constant map at some point of $X$.
+\end{definition}
+
+\section{Triangulations}
+\begin{definition}[General Position]
+    Given $k + 1$ points in an $n$-dimensional euclidean space. These points are said to be in general position if any subset of them spans a strictly smaller hyperplane.
+\end{definition}
+
+\begin{definition}[Simplex]
+    Given $k+1$ points in general position, we call the smallest convex set containing them a simplex of dimension $k$ or a $k$-simplex.
+\end{definition}
+
+\begin{definition}[Simplicial Complex]
+    A finite collection of simplexes in some euclidean space is called a simplicial complex if whenever a simplex is in the collection the each of its faces are also in the collection and if two simplexes intersect, they do so only at a common face. 
+\end{definition}
+
+\begin{definition}[Triangulation]
+    A triangulation of a topological space $X$ consists of a simplicial complex $K$ and a homeomorphism $h: |K| \to X$, where $|K|$ is called the polyhedron of the complex $K$, and is defined as the topological space derived from the union of simplexes in $K$ given the subspace topology from the euclidean space.
+\end{definition}
+
+\begin{definition}{Isomorphic Complexes}
+    A simplicial complex is isomorphic to another if there is a bijection from the set of vertices of $K$ to the set of vertices of $L$, such a set of vertices that form a simplex in $K$ must have an image under the bijection that forms a simplex in $L$. 
+\end{definition}
+
+\section{Barycentric Subdivision and Simplicial Approximation}
+
+\begin{definition}[Barycentre]
+    A Barycentre of a simplex, $A$, is the point given by $\hat{A} = \frac{1}{k+1}(v_0 + v_1 + ... + v_k)$ where $v_0, ..., v_k$ are the vertices of the simplex.
+\end{definition}
+
+\begin{definition}[Barycentric Subdivision]
+    The barycentric subdivision of a complex $K$, can be constructed as follows. First, the vertices of $K^1$ are the barycentres of $K$. Now any collection of these barycentres $\hat{A}_0, \hat{A}_1, ..., \hat{A}_k$ form a $k$-simplex of $K^1$ iff for some permutation $\sigma$ of $0, ..., k$, $A_{\sigma(0)} < A_{\sigma(1)} < ... < A_{\sigma(k)}$, where the less-than relation means that $A_{\sigma(0)}$ is a face of $A_{\sigma(1)}$. 
+    
+    Note that the $m$-th barycentric subdivision $K^m$ is given inductively by $K^m = (K^{m-1})^1$.
+\end{definition}
+
+\begin{definition}[Simplicial map]
+    If $K$ and $L$ are simplicial complexes, then a function $s: |K| \to |L|$ is called simplicial if it takes simplexes of $K$ linearly onto simplexes of $L$.
+\end{definition}
+
+\begin{definition}[Carrier]
+    Given a point $x \in |K|$, and a map $f: |K| \to |L|$. The point $f(x)$ lies in the interior of a unique simplex. This simplex is called the carrier of $f(x)$. In fact, given $x \in |K|$, $x$ lies in the interior of a unique simplex of $K$, and this simplex is called the carrier of $x$.
+\end{definition}
+
+\begin{definition}[Simplicial Approximation]
+    A simplicial map $s: |K| \to |L|$ is a simplicial approximation of $f: |K| \to |L|$ if $s(x)$ lies in the carrier of $f(x)$ for each $x \in |K|$.
+\end{definition}
+
+\begin{theorem}[Simplicial Approximation Theorem]
+    Let $f: |K| \to |L|$ be a map between polyhedra. If $m$ is large enough there is a simplicial approximation $s: |K^m| \to |L|$ of $f: |K^m| \to |L|$. 
+\end{theorem}
+
+\begin{definition}[Open star]
+    The open star of a vertex $v$ in $K$, is the union of the interiors of those simplexes of $K$ which have $v$ as a vertex.
+\end{definition}
+
+\section{Edge Group and Van Kampen's Theorem}
+
+\begin{definition}[Edge path]
+    An edge path in a complex $K$, is a sequence $v_0, v_1, ..., v_k$ of vertices such that each consecutive pair $v_i, v_{i+1}$ spans a simplex of $K$. We allow $v_i = v_{i+1}$.
+
+    We consider two edge paths to be equivalent if we can obtain one from the other by a finite number of operations. The allowed operations are replacing two sides of a triangle with the third side (or vise-versa), or remove/introduce edges that make the path double back on itself, or replace repeated vertices with a single vertex. 
+\end{definition}
+
+\begin{definition}[Edge Group]
+    The set of equivalence classes of edge loops based at a vertex $v$, form a group under the multiplication operation, where the edge loop of the first equivalence class is taken, and then the edge loop of the second equivalence class. This group is denoted $E(K, v)$ and is isomorphic to the fundamental group of $|K|$.
+\end{definition}
+
+\begin{definition}
+    Given a simply connected subcomplex $L$ of $K$, we can define a group called $G(K, L)$ as the group whose generators are for each $v_i, v_j$ pair of vertices, a generator $g_{ij}$, such that $g_{ij} = 1$ if $v_i, v_j$ span a simplex of $L$, and $g_{ij}g_{jk} = g_{ik}$ if $v_i, v_j, v_k$ span a simplex of $K$. This group is isomorphic to the edge group $E(K, v)$. 
+\end{definition}
+
+\begin{theorem}[Van Kampen's Theorem]
+    Suppose $J$ and $K$ are simplicial complexes, such that $J \cap K$ is non-empty and $|J|, |K|, |J\cap K|$ are all path-connected. Let $j: |J \cap K| \to J$ and $k: |J \cap K| \to K$ be the natural inclusion maps. Then the fundamental group of $|J \cup K|$ based at $v$ is obtained from the free product $\pi_1(|J|, v) * \pi_1(|K|, v)$ by adding the relations $j_{*}(z) = k_{*}(z)$ for each $z \in \pi_1(|J\cap K|, v)$. 
+    That is to say that the fundamental group is the free product of the two spaces fundamental groups, with the added restriction that the image of generators of the fundamental group of the intersection must be the same for both $j_{*}$ and $k_{*}$.
+\end{theorem}
+
+\section{Surfaces}
+
+\begin{definition}[Closed Surface]
+    A surface is closed if it is compact, connected, and has no boundary. In other words, a closed surface is a compact, connected Hausdorff space in which each point has a neighborhood homeomorphic to the plane.  
+\end{definition}
+
+\begin{theorem}[Surface Classification]
+     Any closed surface is homeomorphic to a sphere, with a finite number of handles added or a finite number of discs removed and replaced by Mobius strips. Note that adding $m$ handles and $n$ mobius strips is equivalent to adding $2m + n$ mobius strips if $n > 0$.  
+\end{theorem}
+
+\begin{definition}[Combinatorial Surface]
+    A Combinatorial surface is a simplicial complex with the following four properties:
+    \begin{enumerate}
+        \item Dimension 2
+        \item Connected
+        \item Each edge is the face of exactly two triangles
+        \item Each vertex lies in at least three triangles which fit together to form a cone with the given vertex as the apex, and the base a simple polygonal closed curve.
+    \end{enumerate}
+\end{definition}
+
+Add notes on thickening here.
+
+\begin{lemma}
+    Thickening a tree always gives a disc. Thickening a simple closed polygonal curve gives either a cylinder or a Mobius strip.
+\end{lemma}
+
+\begin{definition}[Euler Characteristic]
+    The Euler Characteristic of a finite simplicial complex is 
+    $$ \chi(L) = \sum_{i=0}^n (-1)^i \alpha_{i} $$
+    where $n$ is the dimension of the complex and $\alpha_i$ is the number of $i$-simplexes in $L$.
+\end{definition}
+
+\begin{lemma}
+    The following are equivalent for any Combinatorial surface.
+    \begin{enumerate}
+        \item Every simple closed polygonal curve in $|K|$ whihc is made up of edges of $K^1$ separates $|K|$.
+        \item $\chi(K) = 2$
+        \item $|K|$ is homeomorphic to the sphere.
+    \end{enumerate}
+\end{lemma}
+
+Add notes about surgery here
+
+\begin{theorem}
+    Any Combinatorial surface can be changed into a combinatorial sphere by a finite number of surgeries.
+\end{theorem}
+
+\begin{theorem}
+    Every closed surface is homeomorphic to one of the standard ones.
+\end{theorem}
+
+\section{Simplicial Homology}
+
+
+
+
+
+\end{document}
