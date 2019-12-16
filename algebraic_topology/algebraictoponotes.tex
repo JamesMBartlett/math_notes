@@ -314,7 +314,7 @@ Add notes about surgery here
 \end{definition}
 
 \begin{definition}[$q$-cycles and bounding $q$-cycles]
-    The kernel of the boundary homomorphism, $\partial: C_q(K) \to C__{q-1}(K)$ is the group of $q$-cycles, denoted $Z_q(K)$.
+    The kernel of the boundary homomorphism, $\partial: C_q(K) \to C_{q-1}(K)$ is the group of $q$-cycles, denoted $Z_q(K)$.
     The image of $\partial: C_{q+1}(K) \to C_q(K)$, is the group of bounding $q$-cycles denoted $B_q(K)$.
 \end{definition}
 
@@ -322,6 +322,27 @@ Add notes about surgery here
     The $q$-th homology group is the quotient $Z_q(K) / B_q(K)$.
 \end{definition}
 
+\begin{definition}[$q$-th simplicial map]
+    Given a simplicial map $s: |K| \to |L|$ we can construct a homomorphism $s_q: C_q(K) \to C_q(L)$, such that if $\sigma = (v_0, ..., v_q)$, then $s_q(\sigma) = (s(v_0), ..., s(v_q))$ if all of the vertices of $\sigma$ are distince otherwise $s_q(\sigma) = 0$.
+\end{definition}
+
+\begin{definition}[Chain complex and Chain map]
+    The collections of groups and homomorphisms $$ ... \to C_q(K) \to C_{q-1}(K)\to ... \to C_0(K) \to 0$$ is called the chain complex of $K$. If we have homomorphisms $\phi_q: C_q(K) \to C_q(L)$ such that for all $q$ we have $\partial \phi_q = \phi_{q-1}\partial$, then we call $\phi: C(K) \to C(L)$ a chain map. 
+    Note that chain maps induce homomorphisms $\phi_{q*}: H_q(K) \to H_q(L)$. 
+\end{definition}
+
+\begin{definition}[Stellar subdivision]
+    Let $K$ be a complex, and $A$ a simplex of $K$, with $v$ as $A$'s barycentre. All simplexes that do not have $A$ as a face are not changed. If some simplex $B$ has $A$ as a face then that simplex is replaced as follows. We let $L$ denote the collection of simplexes of $\partial B$ which do not have $A$ as a face. Then we replace $B$ by the cone with $L$ as the base and $v$ as the apex. 
+\end{definition}
+
+\begin{theorem}
+    Barycentre subdivision does not change the homology group of a complex.
+\end{theorem}
+
+\begin{definition}[Subdivision chain map]
+    If $A$ is a face of a $q$-simplex $\sigma$, where $A = (v_0, .., v_k)$ and $\sigma = (v_0, ..., v_k, v_{k+1}, .., v_q)$ then $\chi_q(\sigma) = \sum_{i=0}^k (-1)^i (v, v_0,..., \hat{v_i}, ..., v_k, v_{k+1}, ..., v_q)$.
+    $K^m$ can be produced from $K$ by repeated application of stellar subdivision, so we can compose the above subdivision chain maps into a chain map $\chi : C(K) \to C(K^m)$. 
+\end{definition}
 
 
 \end{document}
